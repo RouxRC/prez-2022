@@ -8,7 +8,8 @@ curl -s https://www.resultats-elections.interieur.gouv.fr/presidentielle-2022/FE
  sed 's/\s*<[^>]*>\s*//g'   |
 sed 's/;M/\nM/g' >> resulats.csv
 
-git add resultats.csv
-git commit -m "update data"
-git push
-
+if git diff resultats.csv > /dev/null && grep "Arthaud" resultats.csv > /dev/null; then
+  git add resultats.csv
+  git commit -m "update data"
+  git push
+fi
