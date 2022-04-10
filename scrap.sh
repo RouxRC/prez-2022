@@ -9,10 +9,38 @@ curl -s https://www.resultats-elections.interieur.gouv.fr/presidentielle-2022/FE
  head -n 48                 |
  sed 's/\s*<[^>]*>\s*//g'   |
  tr "\n" ";"                |
+ sed 's/;$//'               |
  sed 's/;M/\nM/g' >> resultats.csv
 
-if git diff resultats.csv > /dev/null && grep "ARTHAUD" resultats.csv > /dev/null; then
-  git add resultats.csv
+function extract {
+  candidat=$1
+  idx=$2
+  out=$3
+  src=$4
+  if [ -z "$src" ]; then
+    src="resultats.csv"
+  fi
+  value=$(grep "$candidat" $src |
+   awk -F ";" '{print $'$idx'}')
+  sed -i '$s/$/;'"$value"'/' $out
+}
+
+if git diff resultats.csv | grep . > /dev/null && grep "ARTHAUD" resultats.csv > /dev/null; then
+
+  datetime=$(date --iso-8601=minutes)
+  echo "$datetime" >> historique-voix.csv
+  echo "$datetime" >> historique-%inscrits.csv
+  echo "$datetime" >> historique-%exprimes.csv
+  head -1 historique-voix.csv |
+   sed 's/;/\n/g'             |
+   grep -v datetime           |
+   while read candidat; do
+    extract "$candidat" 2 historique-voix.csv
+    extract "$candidat" 3 historique-%inscrits.csv
+    extract "$candidat" 4 historique-%exprimes.csv
+   done
+
+  git add resultats.csv historique*.csv
   git commit -m "update data"
   git push
 fi
