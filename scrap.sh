@@ -16,11 +16,7 @@ function extract {
   candidat=$1
   idx=$2
   out=$3
-  src=$4
-  if [ -z "$src" ]; then
-    src="resultats.csv"
-  fi
-  value=$(grep "$candidat" $src |
+  value=$(grep "$candidat" resultats.csv |
    awk -F ";" '{print $'$idx'}')
   sed -i '$s/$/;'"$value"'/' $out
 }
