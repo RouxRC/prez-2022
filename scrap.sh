@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd $(dirname $0)
+
 echo "candidat;voix;%inscrits;%exprimés" > resultats.csv
 curl -s https://www.resultats-elections.interieur.gouv.fr/presidentielle-2022/FE.html |
  iconv -f iso-8859-15       |
