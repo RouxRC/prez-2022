@@ -11,9 +11,9 @@ function extract {
   sed -i '$s/$/;'"$value"'/' $out
 }
 
-awk -F ";" '{print $1}' resultats.csv  | tr "\n" ";" | sed "s/candidat/datetime/" | sed 's/$/\n/' > historique-voix.csv.tmp
-awk -F ";" '{print $1}' resultats.csv  | tr "\n" ";" | sed "s/candidat/datetime/" | sed 's/$/\n/' > historique-%inscrits.csv.tmp
-awk -F ";" '{print $1}' resultats.csv  | tr "\n" ";" | sed "s/candidat/datetime/" | sed 's/$/\n/' > historique-%exprimes.csv.tmp
+awk -F ";" '{print $1}' resultats.csv  | tr "\n" ";" | sed "s/candidat/datetime/" | sed 's/;$/\n/' > historique-voix.csv.tmp
+awk -F ";" '{print $1}' resultats.csv  | tr "\n" ";" | sed "s/candidat/datetime/" | sed 's/;$/\n/' > historique-%inscrits.csv.tmp
+awk -F ";" '{print $1}' resultats.csv  | tr "\n" ";" | sed "s/candidat/datetime/" | sed 's/;$/\n/' > historique-%exprimes.csv.tmp
 
 git log resultats.csv           |
  grep "commit\|Date"            |
