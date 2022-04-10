@@ -17,8 +17,10 @@ function extract {
   idx=$2
   out=$3
   value=$(grep "$candidat" resultats.csv |
-   awk -F ";" '{print $'$idx'}')
-  sed -i '$s/$/;'"$value"'/' $out
+   awk -F ";" '{print $'$idx'}'          |
+   sed 's/,/./'                          |
+   sed 's/ //')
+  sed -i '$s/$/,'"$value"'/' $out
 }
 
 if git diff resultats.csv | grep . > /dev/null && grep "ARTHAUD" resultats.csv > /dev/null; then
@@ -28,7 +30,7 @@ if git diff resultats.csv | grep . > /dev/null && grep "ARTHAUD" resultats.csv >
   echo "$datetime" >> historique-%inscrits.csv
   echo "$datetime" >> historique-%exprimes.csv
   head -1 historique-voix.csv |
-   sed 's/;/\n/g'             |
+   sed 's/,/\n/g'             |
    grep -v datetime           |
    while read candidat; do
     extract "$candidat" 2 historique-voix.csv
