@@ -19,7 +19,7 @@ function extract {
   value=$(grep "$candidat" resultats.csv |
    awk -F ";" '{print $'$idx'}'          |
    sed 's/,/./'                          |
-   sed 's/ //')
+   sed 's/ //g')
   sed -i '$s/$/,'"$value"'/' $out
 }
 
